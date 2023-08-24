@@ -13,19 +13,17 @@ function ListOfPasswords({ products, handleDelete }: Props) {
 
   const [checkbox, setCheckbox] = useState(false);
 
-
-
   return (
     <main>
       <h1> Senhas Cadastradas</h1>
 
       <label htmlFor="checkbox">
-      Esconder senhas
-      <input
-      type="checkbox"
-      id="checkbox"
-      onChange={ () => setCheckbox(!checkbox) }
-      />
+        Esconder senhas
+        <input
+          type="checkbox"
+          id="checkbox"
+          onChange={() => setCheckbox(!checkbox)}
+        />
       </label>
 
 
@@ -36,6 +34,7 @@ function ListOfPasswords({ products, handleDelete }: Props) {
             key={product.name}
             savedPassword={product}
             handleDelete={handleDelete}
+            showPassword={!checkbox}
           />
         ))}
       </div>

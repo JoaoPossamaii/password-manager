@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PasswordType } from "../Types";
 
+import '../styles/FormPassword.css'
+
 type Props = {
   handleSubmitForm: (formData: PasswordType) => void
 };
@@ -18,12 +20,35 @@ function FormPassword(props: Props) {
 
   const [formData, setFormData] = useState(INITIAL_STATE);
 
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    caracMax: false,
+    caracMin: false,
+    numberAndLetter: false,
+    specialCarac: false,
+  });
+
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
     setFormData({
       ...formData,
-      [event.target.id]: event.target.value,
+      [id]: value,
     });
+
+    if (id === "password") {
+      passwordVerification(value);
+    }
   };
+
+  const handlePasswordFocus = () => {
+    setIsPasswordFocused(true);
+  };
+
+  const handlePasswordBlur = () => {
+    setIsPasswordFocused(false);
+  };
+
 
   const onSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,6 +59,16 @@ function FormPassword(props: Props) {
   const handleClear = () => {
     setFormData(INITIAL_STATE);
   };
+
+  const passwordVerification = (password: string) => {
+    setPasswordRequirements({
+      caracMax: password.length === 16,
+      caracMin: password.length >= 8,
+      numberAndLetter: /\d/.test(password) && /[a-zA-Z]/.test(password),
+      specialCarac: /[^a-zA-Z0-9]/.test(password),
+    });
+  };
+
 
   return (
     <main>
@@ -66,10 +101,33 @@ function FormPassword(props: Props) {
             Password
             <input
               id="password"
+              type="password"
+              maxLength={16}
               onChange={handleChange}
               value={formData.password}
+              onFocus={handlePasswordFocus}
+              onBlur={handlePasswordBlur}
               required
             />
+
+            <div className={`password-verification ${isPasswordFocused ? '' : 'hidden'}`}>
+              <p>A senha deve atender aos seguintes requisitos:</p>
+              <ul>
+                <li className={passwordRequirements.caracMax ? 'met' : ''}>
+                  Ter no máximo 16 caracteres.
+                </li>
+                <li className={passwordRequirements.caracMin ? 'met' : ''}>
+                  Ter pelo menos 8 caracteres.
+                </li>
+                <li className={passwordRequirements.numberAndLetter ? 'met' : ''}>
+                  Conter números e letras.
+                </li>
+                <li className={passwordRequirements.specialCarac ? 'met' : ''}>
+                  Conter caracteres especiais.
+                </li>
+              </ul>
+            </div>
+
           </label>
 
           <label htmlFor="url">

@@ -52,7 +52,6 @@ function App() {
       {registerPasswords
         ? <FormPassword
           handleSubmitForm={handleCreateBoxOfPassword}
-          // togglePassword={passwordField}
         />
         : <ListOfPasswords
           products={savedPassword}
